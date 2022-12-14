@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 import PySimpleGUI as sg
 import clips
 import textwrap
@@ -10,7 +9,7 @@ layout = [
     [
         sg.Push(),
         sg.Column([
-                    [sg.Text('Are you ready?', size=(40, None), key='question_label')],
+                    [sg.Text('Are you ready?', size=(100, None), key='question_label')],
                     [sg.HSep()],
                     [sg.Yes(key='start_button')]
                 ], element_justification='c'),
@@ -45,6 +44,7 @@ if __name__ == '__main__':
     n_of_answers = 0        # number of answers
     answers = []            # answers list
     answer_short = []       # answers in short format
+    string_assert = '(start)'
 
     env = clips.Environment()
     window = sg.Window('Can we date?', layout, size=(1000, 500))
@@ -62,74 +62,54 @@ if __name__ == '__main__':
         # start system
         elif event == 'start_button':
             window['start_button'].Update(visible=False)
-            # run start rule with first question
-            env.run()
-            for f in env.facts():
-                # get string from question fact
-                info = f.__getitem__(0).split(';')
-                print('INFO:', info)
-                if 'question' in str(f):
-                    fact[0] = info[0]
-                    n_of_answers = int(info[1])
-                    question = info[2]
-                    answers = info[3:3 + n_of_answers]
-                    answers_short = info[3 + n_of_answers:]
-
-                    print(fact, n_of_answers, question, answers, answers_short, sep=" | ")
-
-                    question_text = textwrap.wrap(question, 100)
-                    window['question_label'].Update(question_text[0])
-
-                    for i in range(n_of_answers):
-                        window[f'ans{i}'].Update(text=f'{answers[i]}', visible=True)
-                    f.retract()
             window['next_button'].Update(visible=True)
             window['reset_button'].Update(visible=True)
-            fact[1] = answers_short[0]
-            string_assert = f'({fact[0]} {fact[1]})'
-            print('Fact to be asserted: ', string_assert)
-
-        # change assert string based on choosen answer 
-        for i in range(n_of_answers):
-            if event == f'ans{i}':
-                fact[1] = answers_short[i]
-                string_assert = f'({fact[0]} {fact[1]})'
-        
-        if event == 'next_button':
+            window['next_button'].click()
+        # next question
+        elif event == 'next_button':
             print('-------- NEXT QUESTION --------')
-            for i in range(10):
-                window[f'ans{i}'].Update(False, visible=False)
-
             print('Fact to be asserted: ', string_assert)
             env.assert_string(string_assert)
             env.run()
 
+            # reset answers radio buttons
+            for i in range(10):
+                window[f'ans{i}'].Update(False, visible=False)
+            
+            # get string from question fact
             for f in env.facts():
-                # get string from question fact
-                info = f.__getitem__(0).split(';')
-                print('INFO:', info, f)
+                print('FACT:', f)
                 if 'question' in str(f):
+                    # get question based on the fact inserted
+                    info = f.__getitem__(0).split(';')
+                    print('QUESTION:', info)
+
+                    # parse question
                     fact[0] = info[0]
                     n_of_answers = int(info[1])
                     question = info[2]
                     answers = info[3:3+n_of_answers]
                     answers_short = info[3+n_of_answers:]
+                    fact[1] = answers_short[0]
+                    string_assert = f'({fact[0]} {fact[1]})'
 
                     print(fact, n_of_answers, question, answers, answers_short, sep=" | ")
 
+                    # update GUI
                     question_text = textwrap.wrap(question, 100)
                     window['question_label'].Update(question_text[0])
 
                     for i in range(n_of_answers):
                         window[f'ans{i}'].Update(text=f'{answers[i]}', visible=True)
-
+                    
+                    # retract only question fact
                     f.retract()
 
             window['ans0'].Update(True)
             window['next_button'].Update(visible=True)
-            fact[1] = answers_short[0]
-            string_assert = f'({fact[0]} {fact[1]})'
+        # reset system
         elif event == 'reset_button':
+            # reset GUI
             window['question_label'].Update('Are you ready?')
             window['start_button'].Update(visible=True)
             window['next_button'].Update(visible=False)
@@ -138,6 +118,13 @@ if __name__ == '__main__':
             for i in range(10):
                 window[f'ans{i}'].Update(text='', visible=False)
             
+            # reset CLIPS
             env.reset()
+        
+        # change assert string based on choosen answer 
+        for i in range(n_of_answers):
+            if event == f'ans{i}':
+                fact[1] = answers_short[i]
+                string_assert = f'({fact[0]} {fact[1]})'
 
     window.close()
