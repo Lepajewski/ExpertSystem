@@ -30,6 +30,11 @@ layout = [
         sg.Push(),
         sg.Column([[sg.Button('Next', key='next_button', visible=False)]], element_justification='c'),
         sg.Push()
+    ],
+    [
+        sg.Push(),
+        sg.Column([[sg.Button('Reset', key='reset_button', visible=False)]], element_justification='c'),
+        sg.Push()
     ]
 ]
 
@@ -79,6 +84,7 @@ if __name__ == '__main__':
                         window[f'ans{i}'].Update(text=f'{answers[i]}', visible=True)
                     f.retract()
             window['next_button'].Update(visible=True)
+            window['reset_button'].Update(visible=True)
             fact[1] = answers_short[0]
             string_assert = f'({fact[0]} {fact[1]})'
             print('Fact to be asserted: ', string_assert)
@@ -123,5 +129,15 @@ if __name__ == '__main__':
             window['next_button'].Update(visible=True)
             fact[1] = answers_short[0]
             string_assert = f'({fact[0]} {fact[1]})'
+        elif event == 'reset_button':
+            window['question_label'].Update('Are you ready?')
+            window['start_button'].Update(visible=True)
+            window['next_button'].Update(visible=False)
+            window['reset_button'].Update(visible=False)
+
+            for i in range(10):
+                window[f'ans{i}'].Update(text='', visible=False)
+            
+            env.reset()
 
     window.close()
