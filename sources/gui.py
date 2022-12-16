@@ -47,7 +47,7 @@ if __name__ == '__main__':
     string_assert = '(start)'
 
     env = clips.Environment()
-    window = sg.Window('Can we date?', layout, size=(1000, 500))
+    window = sg.Window('Can we date?', layout, size=(1000, 550))
 
     env.load('constructs.clp')
     env.assert_string('(start)')
@@ -102,11 +102,22 @@ if __name__ == '__main__':
                     for i in range(n_of_answers):
                         window[f'ans{i}'].Update(text=f'{answers[i]}', visible=True)
                     
+                    window['next_button'].Update(visible=True)
+                    window['ans0'].Update(True)
                     # retract only question fact
                     f.retract()
+                if 'finish' in str(f):
+                    message = f.__getitem__(0)
 
-            window['ans0'].Update(True)
-            window['next_button'].Update(visible=True)
+                    message = textwrap.wrap(message, 100)
+                    window['question_label'].Update(message[0])
+
+                    for i in range(n_of_answers):
+                        window[f'ans{i}'].Update(text='', visible=False)
+                    
+                    window['next_button'].Update(visible=False)
+                    
+                    f.retract()
         # reset system
         elif event == 'reset_button':
             # reset GUI
@@ -114,6 +125,7 @@ if __name__ == '__main__':
             window['start_button'].Update(visible=True)
             window['next_button'].Update(visible=False)
             window['reset_button'].Update(visible=False)
+            string_assert = '(start)'
 
             for i in range(10):
                 window[f'ans{i}'].Update(text='', visible=False)
