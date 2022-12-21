@@ -54,7 +54,6 @@ if __name__ == '__main__':
     env = clips.Environment()
     window = sg.Window('Can we date?', layout, size=(800, 600))
 
-    print(os.path.dirname(__file__) + '/constructs.clp')
     env.load(os.path.dirname(__file__) + '/constructs.clp')
     env.assert_string('(start)')
 
