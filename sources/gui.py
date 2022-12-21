@@ -1,7 +1,8 @@
 #!/usr/bin/python3
+import os
 import PySimpleGUI as sg
 import clips
-import textwrap
+import textwrap3
 
 sg.theme('DarkGrey4')
 
@@ -15,16 +16,21 @@ layout = [
                 ], element_justification='c'),
         sg.Push()
     ],
-    [sg.Radio('', key='ans0', group_id='radio', visible=False, enable_events=True, default=True)],
-    [sg.Radio('', key='ans1', group_id='radio', visible=False, enable_events=True)],
-    [sg.Radio('', key='ans2', group_id='radio', visible=False, enable_events=True)],
-    [sg.Radio('', key='ans3', group_id='radio', visible=False, enable_events=True)],
-    [sg.Radio('', key='ans4', group_id='radio', visible=False, enable_events=True)],
-    [sg.Radio('', key='ans5', group_id='radio', visible=False, enable_events=True)],
-    [sg.Radio('', key='ans6', group_id='radio', visible=False, enable_events=True)],
-    [sg.Radio('', key='ans7', group_id='radio', visible=False, enable_events=True)],
-    [sg.Radio('', key='ans8', group_id='radio', visible=False, enable_events=True)],
-    [sg.Radio('', key='ans9', group_id='radio', visible=False, enable_events=True)],
+    [sg.pin(sg.Radio('', key='ans0', group_id='radio', visible=False, enable_events=True, default=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans1', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans2', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans3', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans4', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans5', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans6', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans7', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans8', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [sg.pin(sg.Radio('', key='ans9', group_id='radio', visible=False, enable_events=True), shrink=True)],
+    [
+        sg.Push(),
+        sg.pin(sg.Image('', key='finish_image', visible=False), shrink=True),
+        sg.Push()
+    ],
     [
         sg.Push(),
         sg.Column([[sg.Button('Next', key='next_button', visible=False)]], element_justification='c'),
@@ -37,7 +43,6 @@ layout = [
     ]
 ]
 
-
 if __name__ == '__main__':
     fact = ['', '']         # fact to be asserted
     question = ''           # question text
@@ -47,9 +52,10 @@ if __name__ == '__main__':
     string_assert = '(start)'
 
     env = clips.Environment()
-    window = sg.Window('Can we date?', layout, size=(1000, 550))
+    window = sg.Window('Can we date?', layout, size=(800, 600))
 
-    env.load('constructs.clp')
+    print(os.path.dirname(__file__) + '/constructs.clp')
+    env.load(os.path.dirname(__file__) + '/constructs.clp')
     env.assert_string('(start)')
 
     while True:
@@ -96,8 +102,8 @@ if __name__ == '__main__':
                     print(fact, n_of_answers, question, answers, answers_short, sep=" | ")
 
                     # update GUI
-                    question_text = textwrap.wrap(question, 100)
-                    window['question_label'].Update(question_text[0])
+                    question_text = textwrap3.wrap(question, 80)
+                    window['question_label'].Update('\n'.join(question_text))
 
                     for i in range(n_of_answers):
                         window[f'ans{i}'].Update(text=f'{answers[i]}', visible=True)
@@ -109,8 +115,9 @@ if __name__ == '__main__':
                 if 'finish' in str(f):
                     message = f.__getitem__(0)
 
-                    message = textwrap.wrap(message, 100)
-                    window['question_label'].Update(message[0])
+                    message = textwrap3.wrap(message, 80)
+                    print('\n'.join(message))
+                    window['question_label'].Update('\n'.join(message))
 
                     for i in range(n_of_answers):
                         window[f'ans{i}'].Update(text='', visible=False)
@@ -118,6 +125,9 @@ if __name__ == '__main__':
                     window['next_button'].Update(visible=False)
                     
                     f.retract()
+                if 'image' in str(f):
+                    img = f.__getitem__(0)
+                    window['finish_image'].Update(f'{os.path.dirname(__file__)}/img/{img}.png', visible=True)
         # reset system
         elif event == 'reset_button':
             # reset GUI
@@ -125,6 +135,7 @@ if __name__ == '__main__':
             window['start_button'].Update(visible=True)
             window['next_button'].Update(visible=False)
             window['reset_button'].Update(visible=False)
+            window['finish_image'].Update('', visible=False)
             string_assert = '(start)'
 
             for i in range(10):

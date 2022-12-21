@@ -58,6 +58,7 @@
     )
 =>
     (printout t "ABSOLUTELY NOT!!!" crlf)
+    (assert (image "absolutely_not"))
     (assert (finish "ABSOLUTELY NOT!!!"))
 )
 
@@ -65,7 +66,6 @@
     (close_family_member false)
 =>
     (assert (question "desperate_love;2;Are you really in love or just desperate?;God, I am so desperate;No, it's really love, I'm sure;true;false"))
-
 )
 
 (defrule hang-in-there
@@ -74,7 +74,8 @@
         (live_remotely false)
     )
 =>
-    (printout t "Hang in there, pal. You'll meet someone else." crlf)
+    (printout t "Hang in there, pal. You'll meet someone else." crlf)\
+    (assert (image "hang_in_there"))
     (assert (finish "Hang in there, pal. You'll meet someone else."))
 )
 
@@ -94,6 +95,7 @@
     )
 =>
     (printout t "I guess it's OK, but you should probably keep it downlow." crlf)
+    (assert (image "downlow"))
     (assert (finish "I guess it's OK, but you should probably keep it downlow."))
 )
 
@@ -114,6 +116,7 @@
     )  
 =>
     (printout t "Make it happen, captain!" crlf)
+    (assert (image "make_it_happen"))
     (assert (finish "Make it happen, captain!"))
 )
 
@@ -185,6 +188,7 @@
     (friend dungeon_master)
 =>
     (printout t "Yes, for the love of God, someone please have sex with the dungeon master!" crlf)
+    (assert (image "dungeon_master"))
     (assert (finish "Yes, for the love of God, someone please have sex with the dungeon master!"))
 )
 
@@ -192,6 +196,7 @@
     (friend school_crush)
 =>
     (printout t "You've missed the point of this chart. And you disgust me." crlf)
+    (assert (image "disgusting"))
     (assert (finish "You've missed the point of this chart. And you disgust me."))
 )
 
@@ -201,7 +206,7 @@
 
 (defrule screw-bone-hmmm
     (or
-        (lonely little)
+        (lonely true)
         (crazy true)
         (get_high true)
         (profession professor)
@@ -212,16 +217,18 @@
     )
 =>
     (printout t "Screw + bone + ( ͡° ͜ʖ ͡°)" crlf)
+    (assert (image "screw"))
     (assert (finish "Screw + bone + ( ͡° ͜ʖ ͡°)"))
 )
 
 (defrule bad-liar
     (or
-        (lonely not_at_all)
+        (lonely false)
         (crazy false)
     )
 =>
     (printout t "You're a bad liar!" crlf)
+    (assert (image "bad_liar"))
     (assert (finish "You're a bad liar!"))
 )
 
@@ -229,7 +236,7 @@
     (or
         (get_high false)
         (drama false)
-        (done_with_sex true)
+        (done_with_sex false)
         (any_choice true)
         (restraining_order false)
         (author_only_love never)
@@ -242,6 +249,7 @@
     )
 =>
     (printout t "PROBABLY BETTER NOT" crlf)
+    (assert (image "you_better_not"))
     (assert (finish "PROBABLY BETTER NOT"))
 )
 
@@ -249,6 +257,7 @@
     (drama true)
 =>
     (printout t "Awesome! Leaving the house and putting on clothes are two of the worst parts of dating, so this is actually one of the better decisions you'll ever make! Go for it!" crlf)
+    (assert (image "best_decision"))
     (assert (finish "Awesome! Leaving the house and putting on clothes are two of the worst parts of dating, so this is actually one of the better decisions you'll ever make! Go for it!"))
 )
 
@@ -259,6 +268,7 @@
     )
 =>
     (printout t "Well, it's pretty obvious, but go ahead and give it a shot." crlf)
+    (assert (image "give_it_a_shot"))
     (assert (finish "Well, it's pretty obvious, but go ahead and give it a shot."))
 )
 
@@ -331,6 +341,7 @@
     (generate_roumors true)
 =>
     (printout t "Hi, Robert Pattinson." crlf)
+    (assert (image "robert_pattinson"))
     (assert (finish "Hi, Robert Pattinson."))
 )
 
@@ -338,6 +349,7 @@
     (generate_roumors false)
 =>
     (printout t "Not advised, but we'll allow it if you make a sex tape." crlf)
+    (assert (image "tape"))
     (assert (finish "Not advised, but we'll allow it if you make a sex tape."))
 )
 
@@ -354,7 +366,8 @@
     )
 =>
     (printout t "Do whatever it takes!" crlf)
-    (assert (finish "Do whatever it takes!"))
+    (assert (image "whatever_it_takes"))
+    (assert (finish "Do whatever it takes!"))   
 )
 
 (defrule teach-kids
@@ -367,6 +380,7 @@
     (thought_crime true)
 =>
     (printout t "THOUGHT-CRIME! Our agents have been sent to your location. Resistance is useless." crlf)
+    (assert (image "thought_crime"))
     (assert (finish "THOUGHT-CRIME! Our agents have been sent to your location. Resistance is useless."))
 )
 
@@ -421,6 +435,7 @@
     )
 =>
     (printout t "FUCK THAT GHOST" crlf)
+    (assert (image "ghost"))
     (assert (finish "FUCK THAT GHOST"))
 )
 
@@ -440,6 +455,7 @@
     (are_friends true)
 =>
     (printout t "Clear it with your friend first. Bros over hos, right? Or vice versa, as the case may be." crlf)
+    (assert (image "bros_b4_hos"))
     (assert (finish "Clear it with your friend first. Bros over hos, right? Or vice versa, as the case may be."))
 )
 
@@ -456,6 +472,7 @@
     )
 =>
     (printout t "It's for the best right now. Game on!" crlf)
+    (assert (image "game_on"))
     (assert (finish "It's for the best right now. Game on!"))
 )
 
@@ -463,6 +480,7 @@
     (want_to_be_alone false)
 =>
     (printout t "Put down the controller and go take a shower. Your genitals will thank you." crlf)
+    (assert (image "shower"))
     (assert (finish "Put down the controller and go take a shower. Your genitals will thank you."))
 )
 
@@ -476,6 +494,7 @@
     (want_date_animal false)
 =>
     (printout t "Ok, well, not 'date' per se but... ABSOLUTELY NOT!!!" crlf)
+    (assert (image "absolutely_not"))
     (assert (finish "Ok, well, not 'date' per se but... ABSOLUTELY NOT!!!"))
 )
 
