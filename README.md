@@ -11,10 +11,6 @@ Ubuntu/Debian: `sudo apt-get install tk-dev`
 
 Arch/Manjaro: `sudo pacman -S tk`
 
-Windows: Tkinter should be installed along python installation.
-You can also use WSL, conda or other environment.
-
-
 To setup project you need to run:
 
 `pip3 install -r requirements.txt`
